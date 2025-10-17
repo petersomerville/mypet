@@ -1,3 +1,3 @@
 # MyPet
 Digital pet app
-More to come!
+This is the MVP
