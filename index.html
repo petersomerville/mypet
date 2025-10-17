@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MyPet - Your digital companion">
+    <title>MyPet - Digital Pet App</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <div id="app" class="app-container">
+        <!-- Pet Creator View -->
+        <div id="creator-view" class="view hidden">
+            <div class="creator-container">
+                <h1 class="app-title">Create Your Pet</h1>
+                <form id="pet-form" class="pet-form">
+                    <div class="form-group">
+                        <label for="pet-type">Choose your pet:</label>
+                        <div class="pet-type-selector">
+                            <button type="button" class="type-btn" data-type="cat">
+                                <span class="type-icon">🐱</span>
+                                <span class="type-label">Cat</span>
+                            </button>
+                            <button type="button" class="type-btn" data-type="dog">
+                                <span class="type-icon">🐶</span>
+                                <span class="type-label">Dog</span>
+                            </button>
+                        </div>
+                        <input type="hidden" id="pet-type" name="type" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pet-name">Pet Name:</label>
+                        <input
+                            type="text"
+                            id="pet-name"
+                            name="name"
+                            placeholder="Enter your pet's name"
+                            maxlength="20"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pet-description">Describe your pet:</label>
+                        <textarea
+                            id="pet-description"
+                            name="description"
+                            placeholder="What does your pet look like?"
+                            maxlength="100"
+                            rows="3"
+                            required
+                        ></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Create Pet</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Main Game View -->
+        <div id="main-view" class="view hidden">
+            <div class="game-container">
+                <header class="game-header">
+                    <h1 class="app-title">MyPet</h1>
+                    <button id="reset-btn" class="btn btn-secondary btn-small">New Pet</button>
+                </header>
+
+                <!-- Pet Display -->
+                <div id="pet-display" class="pet-display">
+                    <!-- Dynamically populated -->
+                </div>
+
+                <!-- Stats Display -->
+                <div id="stats-display" class="stats-display">
+                    <!-- Dynamically populated -->
+                </div>
+
+                <!-- Activity Controls -->
+                <div id="activity-controls" class="activity-controls">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading View -->
+        <div id="loading-view" class="view">
+            <div class="loading-container">
+                <p>Loading...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="js/utils/helpers.js"></script>
+    <script type="module" src="js/state.js"></script>
+    <script type="module" src="js/components/petCreator.js"></script>
+    <script type="module" src="js/components/petDisplay.js"></script>
+    <script type="module" src="js/components/statsDisplay.js"></script>
+    <script type="module" src="js/components/activityControls.js"></script>
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
