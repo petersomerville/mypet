@@ -79,8 +79,35 @@ const StateManager = {
         ...savedState,
         lastPlayed: Date.now()
       };
+      this.migrateLegacyStats();
     }
     return gameState;
+  },
+
+  // Rename old "hunger" stat to "fullness" for existing saved pets
+  migrateLegacyStats() {
+    const pet = gameState.currentPet;
+    if (!pet || !pet.stats || pet.stats.fullness !== undefined) {
+      return;
+    }
+
+    if (pet.stats.hunger !== undefined) {
+      pet.stats.fullness = pet.stats.hunger;
+      delete pet.stats.hunger;
+
+      gameState.activityHistory = (gameState.activityHistory || []).map(activity => {
+        if (!activity.impact || activity.impact.hunger === undefined) {
+          return activity;
+        }
+        const { hunger, ...restImpact } = activity.impact;
+        return {
+          ...activity,
+          impact: { ...restImpact, fullness: hunger }
+        };
+      });
+
+      StorageService.save(gameState);
+    }
   },
 
   // Get current state
@@ -106,7 +133,7 @@ const StateManager = {
       icon,
       createdAt: Date.now(),
       stats: {
-        hunger: 50,
+        fullness: 50,
         happiness: 50,
         energy: 50
       }
@@ -179,7 +206,7 @@ const StateManager = {
   // Perform activity (updates stats and records activity)
   performActivity(type) {
     const impacts = {
-      feed: { hunger: 20 },
+      feed: { fullness: 20 },
       walk: { energy: 20 },
       play: { happiness: 20 }
     };

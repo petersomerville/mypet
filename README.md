@@ -1,6 +1,6 @@
 # MyPet
 
-A digital pet application built with vanilla JavaScript. Create and care for your virtual pet by managing their happiness, hunger, and energy levels through interactive activities.
+A digital pet application built with vanilla JavaScript. Create and care for your virtual pet by managing their happiness, fullness, and energy levels through interactive activities.
 
 Created by Peter and his niece in October 2025.
 
@@ -12,7 +12,7 @@ Visit the live application: [https://mypet-mu.vercel.app](https://mypet-mu.verce
 
 - **Pet Creation**: Choose between a cat or dog, name your pet, and describe its appearance
 - **Interactive Care**: Feed, play with, and let your pet rest
-- **Real-time Stats**: Monitor your pet's happiness, hunger, and energy levels
+- **Real-time Stats**: Monitor your pet's happiness, fullness, and energy levels
 - **Persistent Storage**: Your pet data is saved locally in the browser
 - **Responsive Design**: Works on desktop and mobile devices
 

@@ -23,7 +23,7 @@ const ActivityControls = {
       <div class="activities-container">
         <h3 class="activities-title">Activities</h3>
         <div class="activity-buttons">
-          ${this.renderActivityButton('feed', 'Feed', '🍖', 'Increase hunger by 20')}
+          ${this.renderActivityButton('feed', 'Feed', '🍖', 'Increase fullness by 20')}
           ${this.renderActivityButton('walk', 'Walk', '🚶', 'Increase energy by 20')}
           ${this.renderActivityButton('play', 'Play', '🎾', 'Increase happiness by 20')}
         </div>

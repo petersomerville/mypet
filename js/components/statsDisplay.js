@@ -26,7 +26,7 @@ const StatsDisplay = {
       <div class="stats-container">
         <h3 class="stats-title">Pet Stats</h3>
         <div class="stats-list">
-          ${this.renderStat('hunger', 'Hunger', stats.hunger, '🍖')}
+          ${this.renderStat('fullness', 'Fullness', stats.fullness, '🍖')}
           ${this.renderStat('happiness', 'Happiness', stats.happiness, '😊')}
           ${this.renderStat('energy', 'Energy', stats.energy, '⚡')}
         </div>
