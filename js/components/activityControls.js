@@ -1,8 +1,17 @@
 // Activity Controls Component
 // Provides interactive buttons for pet activities
 
-import { StateManager } from '../state.js';
+import { StateManager } from '../state.js?v=react-11';
 import { showError, showSuccess } from '../utils/helpers.js';
+
+const ACTIVITY_MESSAGES = {
+  feed: 'Fed your pet!',
+  walk: 'Took your pet for a walk!',
+  play: 'Played with your pet!',
+  nap: 'Your pet took a cozy nap!',
+  treat: 'Gave your pet a tasty treat!',
+  cuddle: 'Cuddled with your pet!'
+};
 
 const ActivityControls = {
   container: null,
@@ -23,9 +32,12 @@ const ActivityControls = {
       <div class="activities-container">
         <h3 class="activities-title">Activities</h3>
         <div class="activity-buttons">
-          ${this.renderActivityButton('feed', 'Feed', '🍖', 'Increase fullness by 20')}
-          ${this.renderActivityButton('walk', 'Walk', '🚶', 'Increase energy by 20')}
-          ${this.renderActivityButton('play', 'Play', '🎾', 'Increase happiness by 20')}
+          ${this.renderActivityButton('feed', 'Feed', '🍖', 'Feed your pet to increase fullness')}
+          ${this.renderActivityButton('treat', 'Treat', '🍪', 'Give a treat for fullness and happiness')}
+          ${this.renderActivityButton('play', 'Play', '🎾', 'Play to increase happiness')}
+          ${this.renderActivityButton('cuddle', 'Cuddle', '💕', 'Cuddle to increase happiness')}
+          ${this.renderActivityButton('walk', 'Walk', '🚶', 'Walk for happiness, but it uses energy')}
+          ${this.renderActivityButton('nap', 'Nap', '😴', 'Nap to restore energy')}
         </div>
       </div>
     `;
@@ -59,39 +71,27 @@ const ActivityControls = {
   },
 
   handleActivity(type, buttonElement) {
-    // Disable button during processing
     buttonElement.disabled = true;
     buttonElement.classList.add('processing');
 
-    // Perform activity
     const result = StateManager.performActivity(type);
 
     if (result.success) {
-      // Show success feedback
-      const messages = {
-        feed: 'Fed your pet!',
-        walk: 'Took your pet for a walk!',
-        play: 'Played with your pet!'
-      };
+      showSuccess(ACTIVITY_MESSAGES[type] || 'Activity completed!');
 
-      showSuccess(messages[type] || 'Activity completed!');
-
-      // Add visual feedback
       buttonElement.classList.add('success');
       setTimeout(() => {
         buttonElement.classList.remove('success');
       }, 500);
 
-      // Notify parent component
       if (this.onActivityPerformed) {
         const pet = StateManager.getCurrentPet();
-        this.onActivityPerformed(pet);
+        this.onActivityPerformed(pet, type);
       }
     } else {
       showError(result.message || 'Failed to perform activity');
     }
 
-    // Re-enable button
     setTimeout(() => {
       buttonElement.disabled = false;
       buttonElement.classList.remove('processing');

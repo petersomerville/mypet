@@ -1,7 +1,7 @@
 // State Management & localStorage Service
 // This module handles all game state and persistence
 
-import { getDefaultAppearance, getFallbackIcon, normalizeAppearance } from './petParts.js?v=acc-2';
+import { getDefaultAppearance, getFallbackIcon, normalizeAppearance } from './petParts.js?v=react-11';
 
 const STORAGE_KEY = 'mypet_gamestate';
 const MAX_STAT_VALUE = 100;
@@ -226,8 +226,11 @@ const StateManager = {
   performActivity(type) {
     const impacts = {
       feed: { fullness: 20 },
-      walk: { energy: 20 },
-      play: { happiness: 20 }
+      walk: { happiness: 15, energy: -15 },
+      play: { happiness: 20 },
+      nap: { energy: 25 },
+      treat: { fullness: 10, happiness: 10 },
+      cuddle: { happiness: 15 }
     };
 
     const impact = impacts[type];

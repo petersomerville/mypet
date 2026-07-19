@@ -11,7 +11,7 @@ Visit the live application: [https://mypet-mu.vercel.app](https://mypet-mu.verce
 ## Features
 
 - **Pet Creation**: Choose a cat or dog, then build its look with mix-and-match parts and a fur color picker
-- **Interactive Care**: Feed, play with, and walk your pet
+- **Interactive Care**: Feed, treat, play, cuddle, walk, or nap with your pet
 - **Real-time Stats**: Monitor your pet's happiness, fullness, and energy levels
 - **Persistent Storage**: Your pet data is saved locally in the browser
 - **Responsive Design**: Works on desktop and mobile devices

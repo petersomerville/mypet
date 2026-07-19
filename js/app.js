@@ -1,11 +1,11 @@
 // Main Application Entry Point
 // Initializes and coordinates all components
 
-import { StateManager } from './state.js?v=acc-2';
-import PetCreator from './components/petCreator.js?v=acc-2';
-import PetDisplay from './components/petDisplay.js?v=acc-2';
-import StatsDisplay from './components/statsDisplay.js?v=acc-2';
-import ActivityControls from './components/activityControls.js?v=acc-2';
+import { StateManager } from './state.js?v=react-11';
+import PetCreator from './components/petCreator.js?v=react-11';
+import PetDisplay from './components/petDisplay.js?v=react-11';
+import StatsDisplay from './components/statsDisplay.js?v=react-11';
+import ActivityControls from './components/activityControls.js?v=react-11';
 
 const App = {
   currentView: null,
@@ -20,7 +20,7 @@ const App = {
     PetCreator.init();
     PetDisplay.init();
     StatsDisplay.init();
-    ActivityControls.init((pet) => this.handleActivityPerformed(pet));
+    ActivityControls.init((pet, activityType) => this.handleActivityPerformed(pet, activityType));
 
     // Set up event listeners
     this.bindEvents();
@@ -101,12 +101,15 @@ const App = {
     this.showView('main-view');
   },
 
-  handleActivityPerformed(pet) {
+  handleActivityPerformed(pet, activityType) {
     console.log('Activity performed, updating displays');
 
     if (pet && pet.stats) {
-      // Update stats display with animation
       StatsDisplay.update(pet.stats);
+    }
+
+    if (activityType) {
+      PetDisplay.playReaction(activityType);
     }
   },
 

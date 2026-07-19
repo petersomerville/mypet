@@ -5,7 +5,7 @@ import {
   RENDER_ORDER,
   getPart,
   normalizeAppearance
-} from '../petParts.js?v=acc-2';
+} from '../petParts.js?v=react-11';
 
 let avatarUid = 0;
 
@@ -65,6 +65,17 @@ const PetAvatar = {
 
   update(container, options) {
     this.render(container, options);
+  },
+
+  // Swap only the eyes layer (used for temporary nap sleepy-eyes)
+  setEyes(container, type, eyeId) {
+    if (!container) return;
+    const layer = container.querySelector('[data-slot="eyes"]');
+    if (!layer) return;
+
+    const safeType = type === 'cat' || type === 'dog' ? type : 'dog';
+    const part = getPart(safeType, 'eyes', eyeId);
+    layer.innerHTML = part?.svg ? uniquifySvgIds(part.svg) : '';
   }
 };
 
