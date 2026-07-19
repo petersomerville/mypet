@@ -24,7 +24,6 @@ const StatsDisplay = {
 
     this.container.innerHTML = `
       <div class="stats-container">
-        <h3 class="stats-title">Pet Stats</h3>
         <div class="stats-list">
           ${this.renderStat('fullness', 'Fullness', stats.fullness, '🍖')}
           ${this.renderStat('happiness', 'Happiness', stats.happiness, '😊')}
@@ -44,7 +43,7 @@ const StatsDisplay = {
         <div class="stat-header">
           <span class="stat-icon">${icon}</span>
           <span class="stat-label">${label}</span>
-          <span class="stat-value">${value}/${MAX_STAT_VALUE}</span>
+          <span class="stat-value">${value}</span>
         </div>
         <div class="stat-bar-container">
           <div class="stat-bar ${colorClass}" style="width: ${percentage}%">
@@ -73,7 +72,7 @@ const StatsDisplay = {
     const levelEl = statItem.querySelector('.stat-bar-label');
 
     if (valueEl) {
-      valueEl.textContent = `${newValue}/${MAX_STAT_VALUE}`;
+      valueEl.textContent = `${newValue}`;
     }
 
     if (barEl) {

@@ -1,15 +1,15 @@
 // Pet Creator Component
 // Handles pet creation form, appearance builder, and validation
 
-import { StateManager } from '../state.js?v=react-11';
+import { StateManager } from '../state.js?v=local-time';
 import {
   APPEARANCE_SLOTS,
   COLOR_SWATCHES,
   PET_PARTS,
   getDefaultAppearance,
   normalizeAppearance
-} from '../petParts.js?v=react-11';
-import PetAvatar from './petAvatar.js?v=react-11';
+} from '../petParts.js?v=local-time';
+import PetAvatar from './petAvatar.js?v=local-time';
 import { validateName, validateDescription, showError, showSuccess } from '../utils/helpers.js';
 
 const SLOT_LABELS = {

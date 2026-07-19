@@ -5,7 +5,7 @@ import {
   RENDER_ORDER,
   getPart,
   normalizeAppearance
-} from '../petParts.js?v=react-11';
+} from '../petParts.js?v=local-time';
 
 let avatarUid = 0;
 

@@ -1,7 +1,7 @@
 // State Management & localStorage Service
 // This module handles all game state and persistence
 
-import { getDefaultAppearance, getFallbackIcon, normalizeAppearance } from './petParts.js?v=react-11';
+import { getDefaultAppearance, getFallbackIcon, normalizeAppearance } from './petParts.js?v=local-time';
 
 const STORAGE_KEY = 'mypet_gamestate';
 const MAX_STAT_VALUE = 100;

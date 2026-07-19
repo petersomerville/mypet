@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="MyPet - Your digital companion">
     <title>MyPet - Digital Pet App</title>
-    <link rel="stylesheet" href="styles/main.css?v=react-11">
+    <link rel="stylesheet" href="styles/main.css?v=local-time">
 </head>
 <body>
     <!-- Decorative backyard scene (behind the app UI) -->
@@ -86,27 +86,28 @@
             </div>
         </div>
 
-        <!-- Main Game View -->
-        <div id="main-view" class="view hidden">
-            <div class="game-container">
-                <header class="game-header">
-                    <h1 class="app-title">MyPet</h1>
-                    <button id="reset-btn" class="btn btn-secondary btn-small">New Pet</button>
-                </header>
+        <!-- Main Game View — immersive yard-first layout -->
+        <div id="main-view" class="view view--immersive hidden">
+            <div class="game-shell">
+                <div class="pet-stage">
+                    <header class="game-header game-header--overlay">
+                        <h1 class="app-title">MyPet</h1>
+                        <button id="reset-btn" class="btn btn-secondary btn-small">New Pet</button>
+                    </header>
 
-                <!-- Pet Display -->
-                <div id="pet-display" class="pet-display">
-                    <!-- Dynamically populated -->
+                    <div id="pet-display" class="pet-display">
+                        <!-- Dynamically populated -->
+                    </div>
+
+                    <div id="activity-controls" class="activity-controls activity-controls--overlay">
+                        <!-- Dynamically populated -->
+                    </div>
                 </div>
 
-                <!-- Stats Display -->
-                <div id="stats-display" class="stats-display">
-                    <!-- Dynamically populated -->
-                </div>
-
-                <!-- Activity Controls -->
-                <div id="activity-controls" class="activity-controls">
-                    <!-- Dynamically populated -->
+                <div class="game-footer">
+                    <div id="stats-display" class="stats-display">
+                        <!-- Dynamically populated -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -120,6 +121,6 @@
     </div>
 
     <!-- Scripts: app.js imports the rest of the modules -->
-    <script type="module" src="js/app.js?v=react-11"></script>
+    <script type="module" src="js/app.js?v=local-time"></script>
 </body>
 </html>

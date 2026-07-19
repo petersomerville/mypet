@@ -1,9 +1,8 @@
 // Pet Display Component
 // Renders the pet standing in front of its house, plus name and description
 
-import { formatDate } from '../utils/helpers.js';
-import { getFallbackIcon, normalizeAppearance } from '../petParts.js?v=react-11';
-import PetAvatar from './petAvatar.js?v=react-11';
+import { getFallbackIcon, normalizeAppearance } from '../petParts.js?v=local-time';
+import PetAvatar from './petAvatar.js?v=local-time';
 
 const ACTIVITY_REACTIONS = {
   cuddle: { emoji: '💕', motion: 'sway', count: 6 },
@@ -46,32 +45,31 @@ const PetDisplay = {
 
     this.currentPet = pet;
     const appearance = normalizeAppearance(pet.type, pet.appearance);
-    const description = pet.description
-      ? `<p class="pet-description">${this.escapeHtml(pet.description)}</p>`
+    const story = pet.description
+      ? ` title="${this.escapeHtml(pet.description)}"`
       : '';
 
     this.container.innerHTML = `
-      <div class="pet-card">
-        <div class="pet-yard">
-          <div class="pet-yard-sky"></div>
-          <div class="pet-yard-grass"></div>
-          <div class="pet-house pet-house--stage" aria-hidden="true">
-            <div class="pet-house-roof"></div>
-            <div class="pet-house-body">
-              <div class="pet-house-door"></div>
-            </div>
-          </div>
-          <div class="pet-paw-trail" id="pet-paw-trail" aria-hidden="true"></div>
-          <div class="pet-figure" id="pet-figure-mount"></div>
-          <div class="pet-reaction-layer" id="pet-reaction-layer" aria-hidden="true"></div>
-          <div class="pet-feed-stage" id="pet-feed-stage" aria-hidden="true"></div>
-          <div class="pet-play-stage" id="pet-play-stage" aria-hidden="true"></div>
+      <div class="pet-yard">
+        <div class="pet-yard-sky">
+          <div class="backyard-cloud backyard-cloud--1" aria-hidden="true"></div>
+          <div class="backyard-cloud backyard-cloud--2" aria-hidden="true"></div>
         </div>
-        <div class="pet-info">
+        <div class="pet-yard-grass"></div>
+        <div class="pet-house pet-house--stage" aria-hidden="true">
+          <div class="pet-house-roof"></div>
+          <div class="pet-house-body">
+            <div class="pet-house-door"></div>
+          </div>
+        </div>
+        <div class="pet-paw-trail" id="pet-paw-trail" aria-hidden="true"></div>
+        <div class="pet-figure" id="pet-figure-mount"></div>
+        <div class="pet-reaction-layer" id="pet-reaction-layer" aria-hidden="true"></div>
+        <div class="pet-feed-stage" id="pet-feed-stage" aria-hidden="true"></div>
+        <div class="pet-play-stage" id="pet-play-stage" aria-hidden="true"></div>
+        <div class="pet-nameplate"${story}>
           <h2 class="pet-name">${this.escapeHtml(pet.name)}</h2>
           <p class="pet-type-badge">${this.capitalize(pet.type)}</p>
-          ${description}
-          <p class="pet-created">Created: ${formatDate(pet.createdAt)}</p>
         </div>
       </div>
     `;
@@ -91,11 +89,16 @@ const PetDisplay = {
 
     this.currentPet = pet;
     const nameEl = this.container.querySelector('.pet-name');
-    const descriptionEl = this.container.querySelector('.pet-description');
+    const badgeEl = this.container.querySelector('.pet-type-badge');
+    const nameplate = this.container.querySelector('.pet-nameplate');
     const figureMount = this.container.querySelector('#pet-figure-mount');
 
     if (nameEl) nameEl.textContent = pet.name;
-    if (descriptionEl) descriptionEl.textContent = pet.description || '';
+    if (badgeEl) badgeEl.textContent = this.capitalize(pet.type);
+    if (nameplate) {
+      if (pet.description) nameplate.setAttribute('title', pet.description);
+      else nameplate.removeAttribute('title');
+    }
 
     if (figureMount) {
       PetAvatar.render(figureMount, {

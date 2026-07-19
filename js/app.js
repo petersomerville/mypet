@@ -1,14 +1,21 @@
 // Main Application Entry Point
 // Initializes and coordinates all components
 
-import { StateManager } from './state.js?v=react-11';
-import PetCreator from './components/petCreator.js?v=react-11';
-import PetDisplay from './components/petDisplay.js?v=react-11';
-import StatsDisplay from './components/statsDisplay.js?v=react-11';
-import ActivityControls from './components/activityControls.js?v=react-11';
+import { StateManager } from './state.js?v=local-time';
+import PetCreator from './components/petCreator.js?v=local-time';
+import PetDisplay from './components/petDisplay.js?v=local-time';
+import StatsDisplay from './components/statsDisplay.js?v=local-time';
+import ActivityControls from './components/activityControls.js?v=local-time';
+
+// Recheck periodically so day/night updates if the tab stays open past 7am/7pm
+const DAY_NIGHT_CHECK_MS = 60000;
+const DAY_START_HOUR = 7;  // 7:00 a.m.
+const NIGHT_START_HOUR = 19; // 7:00 p.m.
 
 const App = {
   currentView: null,
+  dayNightTimerId: null,
+  isNight: false,
 
   init() {
     console.log('MyPet App initializing...');
@@ -31,6 +38,35 @@ const App = {
     console.log('MyPet App initialized');
   },
 
+  // Night from 7:00 p.m. until 7:00 a.m.; day from 7:00 a.m. until 7:00 p.m.
+  shouldBeNight(date = new Date()) {
+    const hour = date.getHours();
+    return hour >= NIGHT_START_HOUR || hour < DAY_START_HOUR;
+  },
+
+  applySceneForLocalTime() {
+    this.isNight = this.shouldBeNight();
+    document.body.classList.toggle('scene--night', this.isNight);
+  },
+
+  startDayNightCycle() {
+    this.stopDayNightCycle();
+    this.applySceneForLocalTime();
+
+    this.dayNightTimerId = window.setInterval(() => {
+      this.applySceneForLocalTime();
+    }, DAY_NIGHT_CHECK_MS);
+  },
+
+  stopDayNightCycle() {
+    if (this.dayNightTimerId !== null) {
+      window.clearInterval(this.dayNightTimerId);
+      this.dayNightTimerId = null;
+    }
+    this.isNight = false;
+    document.body.classList.remove('scene--night');
+  },
+
   bindEvents() {
     // Listen for pet creation
     window.addEventListener('petCreated', () => {
@@ -44,6 +80,13 @@ const App = {
         this.handleReset();
       });
     }
+
+    // Refresh scene when returning to the tab (covers crossing 7am/7pm while away)
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden && this.currentView === 'main-view') {
+        this.applySceneForLocalTime();
+      }
+    });
 
     // Subscribe to state changes
     StateManager.subscribe((state) => {
@@ -78,6 +121,7 @@ const App = {
 
   showCreatorView() {
     console.log('Showing creator view');
+    this.stopDayNightCycle();
     this.showView('creator-view');
   },
 
@@ -97,8 +141,9 @@ const App = {
     StatsDisplay.render(pet.stats);
     ActivityControls.render();
 
-    // Show main view
+    // Show main view and match day/night to the user's local time
     this.showView('main-view');
+    this.startDayNightCycle();
   },
 
   handleActivityPerformed(pet, activityType) {

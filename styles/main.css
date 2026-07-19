@@ -81,6 +81,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
   overflow-x: hidden;
+  transition: background-color 1.4s ease;
 }
 
 /* ================================
@@ -111,12 +112,66 @@ body {
   position: absolute;
   top: 8%;
   right: 12%;
-  width: clamp(48px, 12vw, 88px);
-  height: clamp(48px, 12vw, 88px);
+  width: clamp(96px, 24vw, 176px);
+  height: clamp(96px, 24vw, 176px);
   border-radius: 50%;
   background: radial-gradient(circle at 35% 35%, #fff6b0 0%, var(--sun-color) 55%, #f0c040 100%);
-  box-shadow: 0 0 40px rgba(255, 224, 102, 0.65);
+  box-shadow: 0 0 56px rgba(255, 224, 102, 0.65);
   animation: sun-glow 6s ease-in-out infinite;
+}
+
+/* Pet yard already has a sun — hide the page sun on the main game screen */
+body:has(#main-view:not(.hidden)) .backyard-sun {
+  display: none;
+}
+
+/* ================================
+   Night mode (preview / cycle)
+   ================================ */
+
+body.scene--night {
+  --sky-top: #0a1428;
+  --sky-bottom: #1a2a4a;
+  --sun-color: #eef2f8;
+  --grass-light: #3a5c40;
+  --grass-mid: #2d4a33;
+  --grass-dark: #1e3324;
+  --house-wood: #8a6a48;
+  --house-wood-dark: #6b5136;
+  background-color: #0f1c30;
+}
+
+body.scene--night .backyard-sky {
+  background: linear-gradient(
+    180deg,
+    #070d1a 0%,
+    #152238 45%,
+    #1e3a2a 72%,
+    var(--grass-dark) 100%
+  );
+}
+
+body.scene--night .backyard-cloud {
+  background: rgba(160, 175, 200, 0.22);
+  opacity: 0.45;
+}
+
+body.scene--night .backyard-sun {
+  background: radial-gradient(circle at 35% 35%, #ffffff 0%, #e8eef8 45%, #b8c4d8 100%);
+  box-shadow: 0 0 36px rgba(200, 220, 255, 0.4);
+  animation: none;
+}
+
+/* Crescent cutout for page moon when visible */
+body.scene--night .backyard-sun::after {
+  content: '';
+  position: absolute;
+  top: -8%;
+  right: -12%;
+  width: 85%;
+  height: 85%;
+  border-radius: 50%;
+  background: #0a1428;
 }
 
 .backyard-cloud {
@@ -137,46 +192,46 @@ body {
 .backyard-cloud--1 {
   top: 12%;
   left: 8%;
-  width: 70px;
-  height: 22px;
+  width: 140px;
+  height: 44px;
   animation: cloud-drift 28s linear infinite;
 }
 
 .backyard-cloud--1::before {
-  width: 32px;
-  height: 32px;
-  top: -16px;
-  left: 12px;
+  width: 64px;
+  height: 64px;
+  top: -32px;
+  left: 24px;
 }
 
 .backyard-cloud--1::after {
-  width: 24px;
-  height: 24px;
-  top: -12px;
-  left: 36px;
+  width: 48px;
+  height: 48px;
+  top: -24px;
+  left: 72px;
 }
 
 .backyard-cloud--2 {
   top: 22%;
   left: 55%;
-  width: 90px;
-  height: 26px;
+  width: 180px;
+  height: 52px;
   opacity: 0.75;
   animation: cloud-drift 40s linear infinite reverse;
 }
 
 .backyard-cloud--2::before {
-  width: 38px;
-  height: 38px;
-  top: -18px;
-  left: 16px;
+  width: 76px;
+  height: 76px;
+  top: -36px;
+  left: 32px;
 }
 
 .backyard-cloud--2::after {
-  width: 28px;
-  height: 28px;
-  top: -14px;
-  left: 48px;
+  width: 56px;
+  height: 56px;
+  top: -28px;
+  left: 96px;
 }
 
 .backyard-hill {
@@ -267,6 +322,7 @@ body {
   background: var(--house-door);
   border-radius: 999px 999px 4px 4px;
   box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.35);
+  transition: background 1.4s ease, box-shadow 1.4s ease;
 }
 
 @keyframes sun-glow {
@@ -306,10 +362,22 @@ body {
   padding: var(--spacing-md);
 }
 
+/* Immersive main view: edge-to-edge yard */
+.app-container:has(#main-view:not(.hidden)) {
+  padding: 0;
+  align-items: stretch;
+  justify-content: stretch;
+}
+
 .view {
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
+}
+
+.view--immersive {
+  max-width: none;
+  min-height: 100vh;
 }
 
 .view.hidden {
@@ -622,14 +690,26 @@ h3 {
 }
 
 /* ================================
-   Main Game View
+   Main Game View (immersive)
    ================================ */
 
-.game-container {
-  background: var(--surface);
-  padding: var(--spacing-xl);
-  border-radius: var(--border-radius-lg);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+.game-shell {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.pet-stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 56vh;
+  min-height: 56dvh;
+  display: flex;
+  flex-direction: column;
 }
 
 .game-header {
@@ -639,48 +719,208 @@ h3 {
   margin-bottom: var(--spacing-xl);
 }
 
-.game-header .app-title {
+.game-header--overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 6;
+  margin: 0;
+  padding: calc(env(safe-area-inset-top, 0px) + var(--spacing-sm)) var(--spacing-md) var(--spacing-sm);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.28) 0%, rgba(0, 0, 0, 0) 100%);
+}
+
+.game-header--overlay .app-title {
   margin-bottom: 0;
   font-size: var(--font-size-xl);
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  text-align: left;
+}
+
+.game-header--overlay .btn-secondary {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: none;
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.game-footer {
+  flex: 0 0 auto;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 1.25rem 1.25rem 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.28);
+  padding: var(--spacing-md) var(--spacing-md) calc(env(safe-area-inset-bottom, 0px) + var(--spacing-md));
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.08);
+  z-index: 5;
 }
 
 /* ================================
    Pet Display
    ================================ */
 
-.pet-card {
-  background: var(--surface);
-  border-radius: var(--border-radius-lg);
-  margin-bottom: var(--spacing-xl);
-  text-align: center;
-  color: var(--text-primary);
-  box-shadow: var(--shadow-md);
-  overflow: hidden;
+.pet-display {
+  position: absolute;
+  inset: 0;
 }
 
 .pet-yard {
   position: relative;
-  height: clamp(260px, 48vw, 360px);
+  width: 100%;
+  height: 100%;
+  min-height: 56vh;
+  min-height: 56dvh;
   overflow: hidden;
-  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 55%, var(--grass-light) 100%);
+  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 52%, var(--grass-light) 78%, var(--grass-dark) 100%);
+  transition: background 1.4s ease;
 }
 
 .pet-yard-sky {
   position: absolute;
   inset: 0 0 35% 0;
   background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 100%);
+  overflow: hidden;
+  transition: background 1.4s ease;
+}
+
+.pet-yard-sky .backyard-cloud {
+  z-index: 1;
+  transition: background 1.4s ease, opacity 1.4s ease;
+}
+
+/* Stars fade in/out with the day-night cycle */
+.pet-yard-sky::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image:
+    radial-gradient(1.5px 1.5px at 12% 22%, rgba(255, 255, 255, 0.95), transparent),
+    radial-gradient(1px 1px at 28% 48%, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1.5px 1.5px at 40% 16%, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1px 1px at 55% 38%, rgba(255, 255, 255, 0.75), transparent),
+    radial-gradient(2px 2px at 68% 20%, rgba(255, 255, 255, 0.95), transparent),
+    radial-gradient(1px 1px at 78% 52%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1.5px 1.5px at 88% 30%, rgba(255, 255, 255, 0.85), transparent),
+    radial-gradient(1px 1px at 18% 62%, rgba(255, 255, 255, 0.65), transparent),
+    radial-gradient(1px 1px at 48% 58%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1.5px 1.5px at 92% 12%, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1px 1px at 6% 38%, rgba(255, 255, 255, 0.75), transparent),
+    radial-gradient(1.5px 1.5px at 8% 8%, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1px 1px at 15% 44%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 22% 12%, rgba(255, 255, 255, 0.85), transparent),
+    radial-gradient(1.5px 1.5px at 25% 32%, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1px 1px at 32% 8%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1px 1px at 35% 55%, rgba(255, 255, 255, 0.65), transparent),
+    radial-gradient(2px 2px at 42% 28%, rgba(255, 255, 255, 0.95), transparent),
+    radial-gradient(1px 1px at 46% 6%, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1px 1px at 50% 42%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1.5px 1.5px at 58% 10%, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1px 1px at 62% 48%, rgba(255, 255, 255, 0.65), transparent),
+    radial-gradient(1px 1px at 70% 6%, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1.5px 1.5px at 74% 34%, rgba(255, 255, 255, 0.85), transparent),
+    radial-gradient(1px 1px at 80% 14%, rgba(255, 255, 255, 0.75), transparent),
+    radial-gradient(1px 1px at 84% 58%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(2px 2px at 90% 42%, rgba(255, 255, 255, 0.95), transparent),
+    radial-gradient(1px 1px at 96% 22%, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1px 1px at 4% 55%, rgba(255, 255, 255, 0.55), transparent),
+    radial-gradient(1px 1px at 38% 68%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 64% 64%, rgba(255, 255, 255, 0.55), transparent),
+    radial-gradient(1.5px 1.5px at 72% 44%, rgba(255, 255, 255, 0.85), transparent),
+    radial-gradient(1px 1px at 10% 72%, rgba(255, 255, 255, 0.45), transparent),
+    radial-gradient(1px 1px at 52% 22%, rgba(255, 255, 255, 0.75), transparent),
+    radial-gradient(1px 1px at 98% 50%, rgba(255, 255, 255, 0.65), transparent);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.4s ease;
+}
+
+body.scene--night .pet-yard-sky::before {
+  opacity: 0.95;
 }
 
 .pet-yard-sky::after {
   content: '';
   position: absolute;
-  top: 14%;
-  right: 14%;
-  width: 36px;
-  height: 36px;
+  top: 10%;
+  right: 10%;
+  z-index: 2;
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
   background: radial-gradient(circle at 35% 35%, #fff6b0 0%, var(--sun-color) 60%, #f0c040 100%);
-  box-shadow: 0 0 18px rgba(255, 224, 102, 0.55);
+  box-shadow: 0 0 28px rgba(255, 224, 102, 0.55);
+  transition: background 1.4s ease, box-shadow 1.4s ease, filter 1.4s ease;
+}
+
+/* Yard crescent moon (replaces day sun) */
+body.scene--night .pet-yard-sky::after {
+  background: linear-gradient(145deg, #ffffff 0%, #e8eef8 55%, #c5d0e0 100%);
+  box-shadow: none;
+  /* Cut a circle out of the disc to leave a crescent */
+  -webkit-mask-image: radial-gradient(circle at 68% 42%, transparent 0 54%, #000 55%);
+  mask-image: radial-gradient(circle at 68% 42%, transparent 0 54%, #000 55%);
+  filter: drop-shadow(0 0 16px rgba(190, 210, 255, 0.75));
+}
+
+body.scene--night .pet-yard-grass {
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 12px,
+      rgba(255, 255, 255, 0.04) 12px,
+      rgba(255, 255, 255, 0.04) 14px
+    ),
+    linear-gradient(180deg, var(--grass-light) 0%, var(--grass-mid) 50%, var(--grass-dark) 100%);
+}
+
+body.scene--night .pet-house-door {
+  background: radial-gradient(ellipse at 50% 40%, #f0c070 0%, #c48a3a 45%, #5c3d2e 100%);
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.35),
+    0 0 18px rgba(255, 190, 90, 0.55);
+}
+
+body.scene--night .activity-controls--overlay {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.45) 55%, rgba(0, 0, 0, 0.62) 100%);
+}
+
+body.scene--night .pet-nameplate {
+  background: rgba(20, 30, 50, 0.45);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+body.scene--night .pet-name {
+  color: #d8f0d8;
+}
+
+body.scene--night .pet-type-badge {
+  color: rgba(220, 230, 245, 0.75);
+}
+
+body.scene--night .game-footer {
+  background: rgba(12, 20, 36, 0.35);
+  border-top-color: rgba(255, 255, 255, 0.12);
+}
+
+body.scene--night .stat-item {
+  background: rgba(20, 30, 50, 0.35);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+body.scene--night .stat-label,
+body.scene--night .stat-value {
+  color: #e8eef8;
+}
+
+body.scene--night .stat-bar-container {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 .pet-yard-grass {
@@ -698,13 +938,14 @@ h3 {
       rgba(255, 255, 255, 0.08) 14px
     ),
     linear-gradient(180deg, var(--grass-light) 0%, var(--grass-mid) 50%, var(--grass-dark) 100%);
+  transition: background 1.4s ease;
 }
 
 /* Large house sits farther back; pet stands in front on the grass */
 .pet-house--stage {
   position: absolute;
   left: 54%;
-  bottom: 22%;
+  bottom: 34%;
   z-index: 1;
   width: clamp(150px, 42vw, 230px);
   height: clamp(160px, 44vw, 240px);
@@ -714,7 +955,8 @@ h3 {
 .pet-figure {
   position: absolute;
   left: 46%;
-  bottom: 0;
+  /* Sit above the floating activity bar */
+  bottom: 22%;
   z-index: 2;
   transform: translateX(-50%);
   line-height: 1;
@@ -740,7 +982,7 @@ h3 {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 3%;
+  bottom: 24%;
   z-index: 2;
   height: 52px;
   pointer-events: none;
@@ -794,7 +1036,7 @@ h3 {
 .pet-feed-bowl {
   position: absolute;
   left: 27%;
-  bottom: 4%;
+  bottom: 26%;
   width: 96px;
   height: 64px;
   transform: translateX(-50%);
@@ -825,7 +1067,7 @@ h3 {
 .pet-feed-bite {
   position: absolute;
   left: 27%;
-  bottom: 14%;
+  bottom: 34%;
   font-size: 3.2rem;
   line-height: 1;
   opacity: 0;
@@ -856,7 +1098,7 @@ h3 {
 @keyframes feed-to-mouth {
   0% {
     left: 27%;
-    bottom: 14%;
+    bottom: 34%;
     opacity: 0;
     transform: translateX(-50%) scale(0.75) rotate(-8deg);
   }
@@ -868,7 +1110,7 @@ h3 {
   }
   100% {
     left: 40%;
-    bottom: 50%;
+    bottom: 58%;
     opacity: 0;
     transform: translateX(-50%) scale(0.55) rotate(12deg);
   }
@@ -878,7 +1120,7 @@ h3 {
 .pet-reaction-layer {
   position: absolute;
   left: 46%;
-  bottom: 28%;
+  bottom: 42%;
   z-index: 3;
   width: 220px;
   height: 180px;
@@ -932,7 +1174,7 @@ h3 {
 .pet-play-ball {
   position: absolute;
   left: var(--ball-left, 50%);
-  bottom: 8%;
+  bottom: 28%;
   font-size: var(--size, 2.6rem);
   line-height: 1;
   opacity: 0;
@@ -1218,95 +1460,109 @@ h3 {
   }
 }
 
-.pet-info {
-  padding: var(--spacing-lg) var(--spacing-xl) var(--spacing-xl);
+.pet-nameplate {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 3.25rem);
+  left: 50%;
+  z-index: 5;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.7rem 1.4rem 0.75rem;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  pointer-events: none;
 }
 
 .pet-name {
-  font-size: var(--font-size-2xl);
+  font-size: 1.45rem;
   font-weight: 700;
-  margin-bottom: var(--spacing-sm);
+  margin: 0;
   color: var(--primary-dark);
+  line-height: 1.15;
 }
 
 .pet-type-badge {
   display: inline-block;
-  background: rgba(76, 175, 80, 0.15);
-  color: var(--primary-dark);
-  padding: var(--spacing-xs) var(--spacing-md);
-  border-radius: var(--border-radius);
-  font-size: var(--font-size-sm);
-  font-weight: 600;
-  margin-bottom: var(--spacing-md);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.pet-description {
-  font-size: var(--font-size-base);
-  line-height: 1.5;
-  margin-bottom: var(--spacing-md);
-  color: var(--text-primary);
-}
-
-.pet-created {
-  font-size: var(--font-size-sm);
+  margin: 0;
+  padding: 0;
+  background: transparent;
   color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 /* ================================
    Stats Display
    ================================ */
 
-.stats-container {
-  margin-bottom: var(--spacing-xl);
+.stats-display {
+  margin: 0;
 }
 
-.stats-title {
-  color: var(--text-primary);
-  margin-bottom: var(--spacing-md);
+.stats-container {
+  margin: 0;
 }
 
 .stats-list {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
 }
 
 .stat-item {
-  background: var(--background);
-  padding: var(--spacing-md);
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  padding: 0.45rem 0.65rem;
   border-radius: var(--border-radius);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .stat-header {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-sm);
+  gap: var(--spacing-xs);
+  margin-bottom: 0.25rem;
 }
 
 .stat-icon {
-  font-size: 1.5rem;
+  font-size: 1rem;
+  line-height: 1;
+  opacity: 1;
 }
 
 .stat-label {
   font-weight: 600;
   flex: 1;
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  opacity: 1;
 }
 
 .stat-value {
   font-size: var(--font-size-sm);
-  color: var(--text-secondary);
-  font-weight: 600;
+  color: var(--text-primary);
+  font-weight: 700;
+  opacity: 1;
 }
 
 .stat-bar-container {
-  height: 28px;
-  background: white;
-  border-radius: var(--border-radius);
+  height: 16px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
   overflow: hidden;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 .stat-bar {
@@ -1315,7 +1571,7 @@ h3 {
   align-items: center;
   justify-content: center;
   transition: width var(--transition-base), background-color var(--transition-base);
-  border-radius: var(--border-radius);
+  border-radius: 999px;
   position: relative;
 }
 
@@ -1336,10 +1592,11 @@ h3 {
 }
 
 .stat-bar-label {
-  font-size: var(--font-size-sm);
+  font-size: 0.65rem;
   font-weight: 700;
-  color: white;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  color: #fff;
+  opacity: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
 }
 
 .stat-bar.stat-updated {
@@ -1360,24 +1617,39 @@ h3 {
    ================================ */
 
 .activities-container {
-  margin-bottom: var(--spacing-md);
+  margin: 0;
 }
 
 .activities-title {
   color: var(--text-primary);
-  margin-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
+  font-size: var(--font-size-lg);
+}
+
+.activity-controls--overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 6;
+  margin: 0;
+  padding: var(--spacing-md) var(--spacing-md) calc(var(--spacing-md) + 0.25rem);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.34) 55%, rgba(0, 0, 0, 0.45) 100%);
+}
+
+.activity-controls--overlay .activities-title {
+  color: #fff;
+  text-align: center;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  margin-bottom: var(--spacing-sm);
 }
 
 .activity-buttons {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--spacing-md);
-}
-
-@media (max-width: 480px) {
-  .activity-buttons {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  gap: var(--spacing-sm);
 }
 
 .activity-btn {
@@ -1385,22 +1657,35 @@ h3 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-lg) var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-xs);
   background: var(--primary-color);
   color: white;
   border: none;
-  border-radius: var(--border-radius-lg);
+  border-radius: var(--border-radius);
   cursor: pointer;
   transition: all var(--transition-base);
   font-weight: 600;
-  min-height: 100px;
+  min-height: 58px;
   box-shadow: var(--shadow-sm);
+}
+
+.activity-controls--overlay .activity-btn {
+  background: rgba(76, 175, 80, 0.42);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
+  color: #fff;
 }
 
 .activity-btn:hover:not(:disabled) {
   background-color: var(--primary-dark);
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.activity-controls--overlay .activity-btn:hover:not(:disabled) {
+  background: rgba(56, 142, 60, 0.55);
 }
 
 .activity-btn:active:not(:disabled) {
@@ -1408,12 +1693,12 @@ h3 {
 }
 
 .activity-btn:disabled {
-  opacity: 0.6;
   cursor: not-allowed;
+  background: rgba(76, 175, 80, 0.22);
 }
 
 .activity-btn.processing {
-  opacity: 0.7;
+  background: rgba(76, 175, 80, 0.3);
 }
 
 .activity-btn.success {
@@ -1430,13 +1715,25 @@ h3 {
 }
 
 .activity-icon {
-  font-size: 2rem;
-  margin-bottom: var(--spacing-sm);
+  font-size: 1.35rem;
+  margin-bottom: 0.15rem;
+  line-height: 1;
+  opacity: 1;
 }
 
 .activity-label {
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
+  line-height: 1.2;
+  opacity: 1;
 }
+
+.activity-controls--overlay .activity-icon,
+.activity-controls--overlay .activity-label {
+  opacity: 1;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
 
 /* ================================
    Loading View
@@ -1490,26 +1787,44 @@ h3 {
    ================================ */
 
 @media (min-width: 768px) {
+  .game-shell {
+    max-width: 560px;
+  }
+
+  .pet-stage,
+  .pet-yard {
+    min-height: 62vh;
+  }
+
   .activity-buttons {
-    gap: var(--spacing-lg);
+    gap: var(--spacing-md);
   }
 
   .activity-btn {
-    padding: var(--spacing-xl);
+    padding: var(--spacing-md) var(--spacing-sm);
+    min-height: 68px;
   }
 
-  .pet-yard {
-    height: 380px;
+  .activity-icon {
+    font-size: 1.5rem;
+  }
+
+  .activity-label {
+    font-size: var(--font-size-sm);
   }
 
   .pet-house--stage {
     width: 240px;
     height: 250px;
-    bottom: 24%;
+    bottom: 36%;
   }
 
   .pet-avatar--stage {
-    width: 250px;
+    width: clamp(200px, 40vw, 260px);
+  }
+
+  .pet-figure {
+    bottom: 24%;
   }
 
   .appearance-preview {

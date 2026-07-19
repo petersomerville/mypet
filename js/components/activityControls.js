@@ -1,7 +1,7 @@
 // Activity Controls Component
 // Provides interactive buttons for pet activities
 
-import { StateManager } from '../state.js?v=react-11';
+import { StateManager } from '../state.js?v=local-time';
 import { showError, showSuccess } from '../utils/helpers.js';
 
 const ACTIVITY_MESSAGES = {
@@ -30,7 +30,7 @@ const ActivityControls = {
 
     this.container.innerHTML = `
       <div class="activities-container">
-        <h3 class="activities-title">Activities</h3>
+        <h3 class="activities-title">What will you do?</h3>
         <div class="activity-buttons">
           ${this.renderActivityButton('feed', 'Feed', '🍖', 'Feed your pet to increase fullness')}
           ${this.renderActivityButton('treat', 'Treat', '🍪', 'Give a treat for fullness and happiness')}
