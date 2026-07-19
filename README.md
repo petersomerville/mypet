@@ -10,8 +10,8 @@ Visit the live application: [https://mypet-mu.vercel.app](https://mypet-mu.verce
 
 ## Features
 
-- **Pet Creation**: Choose between a cat or dog, name your pet, and describe its appearance
-- **Interactive Care**: Feed, play with, and let your pet rest
+- **Pet Creation**: Choose a cat or dog, then build its look with mix-and-match parts and a fur color picker
+- **Interactive Care**: Feed, play with, and walk your pet
 - **Real-time Stats**: Monitor your pet's happiness, fullness, and energy levels
 - **Persistent Storage**: Your pet data is saved locally in the browser
 - **Responsive Design**: Works on desktop and mobile devices
@@ -33,9 +33,11 @@ mypet/
 ├── js/
 │   ├── app.js             # Application initialization
 │   ├── state.js           # State management
+│   ├── petParts.js        # Avatar part catalog
 │   ├── components/
-│   │   ├── petCreator.js      # Pet creation UI
-│   │   ├── petDisplay.js      # Pet visualization
+│   │   ├── petCreator.js      # Pet creation + appearance builder
+│   │   ├── petAvatar.js       # Layered pet renderer
+│   │   ├── petDisplay.js      # Pet yard visualization
 │   │   ├── statsDisplay.js    # Stats monitoring
 │   │   └── activityControls.js # Activity buttons
 │   └── utils/

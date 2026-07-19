@@ -1,11 +1,11 @@
 // Main Application Entry Point
 // Initializes and coordinates all components
 
-import { StateManager } from './state.js';
-import PetCreator from './components/petCreator.js';
-import PetDisplay from './components/petDisplay.js';
-import StatsDisplay from './components/statsDisplay.js';
-import ActivityControls from './components/activityControls.js';
+import { StateManager } from './state.js?v=acc-2';
+import PetCreator from './components/petCreator.js?v=acc-2';
+import PetDisplay from './components/petDisplay.js?v=acc-2';
+import StatsDisplay from './components/statsDisplay.js?v=acc-2';
+import ActivityControls from './components/activityControls.js?v=acc-2';
 
 const App = {
   currentView: null,

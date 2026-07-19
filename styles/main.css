@@ -26,6 +26,18 @@
   --success-color: #4CAF50;
   --warning-color: #FFC107;
 
+  /* Backyard scene */
+  --sky-top: #5eb0e5;
+  --sky-bottom: #c8e7f8;
+  --sun-color: #ffe066;
+  --grass-light: #7bc96f;
+  --grass-mid: #5faf52;
+  --grass-dark: #4a9440;
+  --house-wood: #d4a574;
+  --house-wood-dark: #b8844f;
+  --house-roof: #e85d5d;
+  --house-door: #5c3d2e;
+
   /* Stat Colors */
   --stat-high: #4CAF50;
   --stat-medium: #FFC107;
@@ -63,10 +75,221 @@ body {
   font-family: var(--font-family);
   font-size: var(--font-size-base);
   color: var(--text-primary);
-  background-color: var(--background);
+  background-color: var(--sky-bottom);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ================================
+   Backyard Scene
+   ================================ */
+
+.backyard-scene {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.backyard-sky {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    var(--sky-top) 0%,
+    var(--sky-bottom) 55%,
+    #d8f0c8 70%,
+    var(--grass-light) 100%
+  );
+}
+
+.backyard-sun {
+  position: absolute;
+  top: 8%;
+  right: 12%;
+  width: clamp(48px, 12vw, 88px);
+  height: clamp(48px, 12vw, 88px);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff6b0 0%, var(--sun-color) 55%, #f0c040 100%);
+  box-shadow: 0 0 40px rgba(255, 224, 102, 0.65);
+  animation: sun-glow 6s ease-in-out infinite;
+}
+
+.backyard-cloud {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 999px;
+  filter: blur(0.5px);
+}
+
+.backyard-cloud::before,
+.backyard-cloud::after {
+  content: '';
+  position: absolute;
+  background: inherit;
+  border-radius: 50%;
+}
+
+.backyard-cloud--1 {
+  top: 12%;
+  left: 8%;
+  width: 70px;
+  height: 22px;
+  animation: cloud-drift 28s linear infinite;
+}
+
+.backyard-cloud--1::before {
+  width: 32px;
+  height: 32px;
+  top: -16px;
+  left: 12px;
+}
+
+.backyard-cloud--1::after {
+  width: 24px;
+  height: 24px;
+  top: -12px;
+  left: 36px;
+}
+
+.backyard-cloud--2 {
+  top: 22%;
+  left: 55%;
+  width: 90px;
+  height: 26px;
+  opacity: 0.75;
+  animation: cloud-drift 40s linear infinite reverse;
+}
+
+.backyard-cloud--2::before {
+  width: 38px;
+  height: 38px;
+  top: -18px;
+  left: 16px;
+}
+
+.backyard-cloud--2::after {
+  width: 28px;
+  height: 28px;
+  top: -14px;
+  left: 48px;
+}
+
+.backyard-hill {
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  bottom: 18%;
+  height: 28%;
+  background: radial-gradient(ellipse 80% 100% at 50% 100%, var(--grass-mid) 0%, var(--grass-dark) 100%);
+  border-radius: 50% 50% 0 0;
+}
+
+.backyard-grass {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 26%;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 14px,
+      rgba(255, 255, 255, 0.06) 14px,
+      rgba(255, 255, 255, 0.06) 16px
+    ),
+    linear-gradient(180deg, var(--grass-light) 0%, var(--grass-mid) 45%, var(--grass-dark) 100%);
+}
+
+.pet-house {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.22));
+}
+
+.pet-house-roof {
+  width: 118%;
+  height: 36%;
+  min-height: 36px;
+  background: var(--house-roof);
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  margin-bottom: -1px;
+  position: relative;
+}
+
+.pet-house-roof::after {
+  content: '';
+  position: absolute;
+  left: 62%;
+  top: 55%;
+  width: 14px;
+  height: 16px;
+  background: var(--house-wood-dark);
+  border-radius: 2px 2px 0 0;
+}
+
+.pet-house-body {
+  width: 100%;
+  height: 64%;
+  background: linear-gradient(180deg, var(--house-wood) 0%, var(--house-wood-dark) 100%);
+  border-radius: 2px 2px 6px 6px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.pet-house-body::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0,
+    transparent 12px,
+    rgba(0, 0, 0, 0.06) 12px,
+    rgba(0, 0, 0, 0.06) 14px
+  );
+}
+
+.pet-house-door {
+  position: relative;
+  z-index: 1;
+  width: 40%;
+  height: 62%;
+  background: var(--house-door);
+  border-radius: 999px 999px 4px 4px;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+@keyframes sun-glow {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 36px rgba(255, 224, 102, 0.55);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 0 52px rgba(255, 224, 102, 0.8);
+  }
+}
+
+@keyframes cloud-drift {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(40px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 
 /* ================================
@@ -74,6 +297,8 @@ body {
    ================================ */
 
 .app-container {
+  position: relative;
+  z-index: 1;
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -169,7 +394,7 @@ h3 {
   background: var(--surface);
   padding: var(--spacing-xl);
   border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
 }
 
 .pet-form {
@@ -210,6 +435,154 @@ h3 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--spacing-md);
+}
+
+/* ================================
+   Appearance Builder
+   ================================ */
+
+.appearance-builder {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: linear-gradient(180deg, rgba(94, 176, 229, 0.12) 0%, rgba(123, 201, 111, 0.12) 100%);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+}
+
+.appearance-builder.hidden {
+  display: none;
+}
+
+.appearance-title {
+  font-size: var(--font-size-lg);
+  color: var(--primary-dark);
+  margin: 0;
+  text-align: center;
+}
+
+.appearance-preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 170px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-md);
+}
+
+.appearance-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-primary);
+}
+
+.color-picker-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.color-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  flex: 1;
+}
+
+.color-swatch {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 50%;
+  border: 3px solid rgba(0, 0, 0, 0.12);
+  background: var(--swatch-color);
+  cursor: pointer;
+  padding: 0;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+.color-swatch:hover,
+.color-swatch.selected {
+  transform: scale(1.08);
+  border-color: var(--primary-dark);
+}
+
+.custom-color-label {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.custom-color-label input[type="color"] {
+  width: 48px;
+  height: 36px;
+  padding: 0;
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background: transparent;
+  cursor: pointer;
+}
+
+.appearance-slot-menus {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.appearance-slot-label {
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-primary);
+}
+
+.part-option-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(88px, 1fr));
+  gap: var(--spacing-sm);
+}
+
+.part-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm);
+  background: var(--surface);
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  min-height: 96px;
+  transition: border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.part-option:hover {
+  border-color: var(--primary-light);
+  transform: translateY(-1px);
+}
+
+.part-option.selected {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+.part-option-preview {
+  width: 64px;
+  height: 64px;
+}
+
+.part-option-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: center;
 }
 
 .type-btn {
@@ -256,7 +629,7 @@ h3 {
   background: var(--surface);
   padding: var(--spacing-xl);
   border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
 }
 
 .game-header {
@@ -276,43 +649,162 @@ h3 {
    ================================ */
 
 .pet-card {
-  background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
+  background: var(--surface);
   border-radius: var(--border-radius-lg);
-  padding: var(--spacing-xl);
   margin-bottom: var(--spacing-xl);
   text-align: center;
-  color: white;
+  color: var(--text-primary);
   box-shadow: var(--shadow-md);
+  overflow: hidden;
 }
 
-.pet-icon-container {
-  margin-bottom: var(--spacing-md);
+.pet-yard {
+  position: relative;
+  height: clamp(260px, 48vw, 360px);
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 55%, var(--grass-light) 100%);
 }
 
-.pet-icon {
-  font-size: 6rem;
-  display: inline-block;
+.pet-yard-sky {
+  position: absolute;
+  inset: 0 0 35% 0;
+  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 100%);
+}
+
+.pet-yard-sky::after {
+  content: '';
+  position: absolute;
+  top: 14%;
+  right: 14%;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff6b0 0%, var(--sun-color) 60%, #f0c040 100%);
+  box-shadow: 0 0 18px rgba(255, 224, 102, 0.55);
+}
+
+.pet-yard-grass {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 38%;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 12px,
+      rgba(255, 255, 255, 0.08) 12px,
+      rgba(255, 255, 255, 0.08) 14px
+    ),
+    linear-gradient(180deg, var(--grass-light) 0%, var(--grass-mid) 50%, var(--grass-dark) 100%);
+}
+
+/* Large house sits farther back; pet stands in front on the grass */
+.pet-house--stage {
+  position: absolute;
+  left: 54%;
+  bottom: 22%;
+  z-index: 1;
+  width: clamp(150px, 42vw, 230px);
+  height: clamp(160px, 44vw, 240px);
+  transform: translateX(-50%);
+}
+
+.pet-figure {
+  position: absolute;
+  left: 46%;
+  bottom: 0;
+  z-index: 2;
+  transform: translateX(-50%);
+  line-height: 1;
+  filter: drop-shadow(0 4px 5px rgba(0, 0, 0, 0.28));
   animation: float 3s ease-in-out infinite;
+}
+
+.pet-figure::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 6%;
+  z-index: -1;
+  width: 45%;
+  height: 8px;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 50%;
+}
+
+/* Sticker-style layered avatar with soft depth */
+.pet-avatar {
+  position: relative;
+  width: 160px;
+  aspect-ratio: 1;
+  color: var(--pet-color, #C68642);
+  margin: 0 auto;
+  filter:
+    drop-shadow(0 10px 14px rgba(0, 0, 0, 0.28))
+    drop-shadow(0 2px 3px rgba(0, 0, 0, 0.18));
+}
+
+.pet-avatar-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.pet-avatar-layer svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+/* body < pattern < head < eyes < collar < accessory */
+.pet-avatar-layer--body { z-index: 1; }
+.pet-avatar-layer--pattern { z-index: 2; }
+.pet-avatar-layer--base { z-index: 3; }
+.pet-avatar-layer--eyes { z-index: 4; }
+.pet-avatar-layer--collar { z-index: 5; }
+.pet-avatar-layer--accessory { z-index: 6; }
+
+.pet-avatar--preview {
+  width: 170px;
+}
+
+.pet-avatar--stage {
+  width: clamp(170px, 48vw, 240px);
+}
+
+.pet-avatar--thumb {
+  width: 64px;
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.22));
 }
 
 @keyframes float {
   0%, 100% {
-    transform: translateY(0);
+    transform: translateX(-50%) translateY(0);
   }
   50% {
-    transform: translateY(-10px);
+    transform: translateX(-50%) translateY(-10px);
   }
+}
+
+.pet-info {
+  padding: var(--spacing-lg) var(--spacing-xl) var(--spacing-xl);
 }
 
 .pet-name {
   font-size: var(--font-size-2xl);
   font-weight: 700;
   margin-bottom: var(--spacing-sm);
+  color: var(--primary-dark);
 }
 
 .pet-type-badge {
   display: inline-block;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(76, 175, 80, 0.15);
+  color: var(--primary-dark);
   padding: var(--spacing-xs) var(--spacing-md);
   border-radius: var(--border-radius);
   font-size: var(--font-size-sm);
@@ -326,12 +818,12 @@ h3 {
   font-size: var(--font-size-base);
   line-height: 1.5;
   margin-bottom: var(--spacing-md);
-  opacity: 0.95;
+  color: var(--text-primary);
 }
 
 .pet-created {
   font-size: var(--font-size-sm);
-  opacity: 0.8;
+  color: var(--text-secondary);
 }
 
 /* ================================
@@ -572,8 +1064,22 @@ h3 {
     padding: var(--spacing-xl);
   }
 
-  .pet-icon {
-    font-size: 8rem;
+  .pet-yard {
+    height: 380px;
+  }
+
+  .pet-house--stage {
+    width: 240px;
+    height: 250px;
+    bottom: 24%;
+  }
+
+  .pet-avatar--stage {
+    width: 250px;
+  }
+
+  .appearance-preview {
+    min-height: 200px;
   }
 }
 

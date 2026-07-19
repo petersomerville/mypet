@@ -26,17 +26,17 @@ export function validateName(name) {
   return { valid: true, value: trimmed };
 }
 
-// Validate pet description
+// Validate pet description (optional story text)
 export function validateDescription(description) {
-  if (!description || typeof description !== 'string') {
-    return { valid: false, error: 'Description is required' };
+  if (description == null || description === '') {
+    return { valid: true, value: '' };
+  }
+
+  if (typeof description !== 'string') {
+    return { valid: false, error: 'Description must be text' };
   }
 
   const trimmed = description.trim();
-
-  if (trimmed.length === 0) {
-    return { valid: false, error: 'Description cannot be empty' };
-  }
 
   if (trimmed.length > 100) {
     return { valid: false, error: 'Description must be 100 characters or less' };

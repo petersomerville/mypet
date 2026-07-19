@@ -1,6 +1,8 @@
 // State Management & localStorage Service
 // This module handles all game state and persistence
 
+import { getDefaultAppearance, getFallbackIcon, normalizeAppearance } from './petParts.js?v=acc-2';
+
 const STORAGE_KEY = 'mypet_gamestate';
 const MAX_STAT_VALUE = 100;
 const MIN_STAT_VALUE = 0;
@@ -79,19 +81,19 @@ const StateManager = {
         ...savedState,
         lastPlayed: Date.now()
       };
-      this.migrateLegacyStats();
+      this.migrateLegacyPet();
     }
     return gameState;
   },
 
-  // Rename old "hunger" stat to "fullness" for existing saved pets
-  migrateLegacyStats() {
+  // Upgrade older saved pets (hunger → fullness, add appearance)
+  migrateLegacyPet() {
     const pet = gameState.currentPet;
-    if (!pet || !pet.stats || pet.stats.fullness !== undefined) {
-      return;
-    }
+    if (!pet) return;
 
-    if (pet.stats.hunger !== undefined) {
+    let changed = false;
+
+    if (pet.stats && pet.stats.fullness === undefined && pet.stats.hunger !== undefined) {
       pet.stats.fullness = pet.stats.hunger;
       delete pet.stats.hunger;
 
@@ -105,7 +107,22 @@ const StateManager = {
           impact: { ...restImpact, fullness: hunger }
         };
       });
+      changed = true;
+    }
 
+    if (!pet.appearance) {
+      pet.appearance = getDefaultAppearance(pet.type);
+      pet.icon = pet.icon || getFallbackIcon(pet.type);
+      changed = true;
+    } else {
+      const normalized = normalizeAppearance(pet.type, pet.appearance);
+      if (JSON.stringify(normalized) !== JSON.stringify(pet.appearance)) {
+        pet.appearance = normalized;
+        changed = true;
+      }
+    }
+
+    if (changed) {
       StorageService.save(gameState);
     }
   },
@@ -121,16 +138,18 @@ const StateManager = {
   },
 
   // Create new pet
-  createPet(name, type, description) {
+  createPet(name, type, description, appearance = null) {
     const petId = Date.now().toString();
-    const icon = type === 'cat' ? '🐱' : '🐶';
+    const icon = getFallbackIcon(type);
+    const look = normalizeAppearance(type, appearance || getDefaultAppearance(type));
 
     const newPet = {
       id: petId,
       name: name.trim(),
       type,
-      description: description.trim(),
+      description: (description || '').trim(),
       icon,
+      appearance: look,
       createdAt: Date.now(),
       stats: {
         fullness: 50,
